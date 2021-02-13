@@ -1,0 +1,35 @@
+#!/usr/bin/env node
+// Takes a list of parameters and outputs corresponding Google Trends data in
+// CSV format
+
+// Check for keywords as command line arguments
+if (process.argv.length <= 2) {
+    console.log("Usage:");
+    console.log("gtrends KEYWORD1 [KEYWORD2 ...]");
+    process.exit(1);
+}
+
+// Download data for keywords
+const keywords = process.argv.slice(2);
+const keywords_indexed = ['timestamp'].concat(keywords);
+const separator = ',';
+const googleTrends = require('google-trends-api');
+googleTrends.interestOverTime({keyword: keywords})
+.then(function(results){
+  const results_obj = JSON.parse(results); //.default.timelineData;
+  const timeline_data = results_obj.default.timelineData;
+  const timeseries = timeline_data.map(entry => [parseInt(entry.time)].concat(entry.value));
+
+  // Build CSV string
+  var csv_string = keywords_indexed.join(separator) + '\n';
+  timeseries.forEach(function(line) {
+      csv_string += line.join(separator) + '\n';
+  });
+
+  // Output CSV string
+  console.log(csv_string);
+})
+.catch(function(err){
+  console.error('Error downloading data :(', err);
+});
+
