@@ -6,8 +6,22 @@ CLI to collect data from Google Trends in CSV files using [`google-trends-api`](
 
 Install `google-trends-api`:
 
-```
+```console
 $ npm install google-trends-api
+```
+
+## Regular usage
+
+To invoke the CLI and collect data, use the following command. Be sure to replace `KEYWORD*`:
+
+```console
+$ ./gtrends KEYWORD1 KEYWORD2
+```
+
+Use redirection of standard output to persist results in a file:
+
+```console
+$ ./gtrends KEYWORD1 KEYWORD2 > $(date -I)-KEYWORD1-KEYWORD2.csv
 ```
 
 ## Using data in Python
